@@ -1,0 +1,47 @@
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `username` varchar(20) NOT NULL,
+  `password` varchar(20) NOT NULL,
+  `enabled` tinyint(4) NOT NULL DEFAULT '1',
+  `age` int(11) NOT NULL,
+  `gender` varchar(20) NOT NULL,
+  `email_address` varchar(20) NOT NULL,
+  `profession` varchar(20) NOT NULL,
+  `name` varchar(20) NOT NULL,
+  PRIMARY KEY (`username`)
+);
+
+
+DROP TABLE IF EXISTS `user_roles`;
+CREATE TABLE `user_roles` (
+  `user_role_id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(20) NOT NULL,
+  `role` varchar(20) NOT NULL,
+  PRIMARY KEY (`user_role_id`),
+  UNIQUE KEY `uni_username_role` (`role`,`username`),
+  KEY `fk_username_idx` (`username`),
+  CONSTRAINT `fk_username` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+DROP TABLE IF EXISTS `message_details`;
+CREATE TABLE `message_details` (
+  `message_id` int(11) NOT NULL AUTO_INCREMENT,
+  `message_content` longtext,
+  `receiver_username` varchar(20) NOT NULL,
+  `sender_username` varchar(20) NOT NULL,
+  PRIMARY KEY (`message_id`),
+  KEY `receiver_unique_user_name_idx` (`receiver_username`),
+  KEY `sender_unique_user_name_idx` (`sender_username`),
+  CONSTRAINT `fk_sender_unique_user_name` FOREIGN KEY (`sender_username`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS `user_group`;
+CREATE TABLE `user_group` (
+  `group_id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_name`  varchar(20) NOT NULL,
+  `user_name` varchar(20) NOT null,
+  `admin_ind` varchar(2) NOT null,
+  PRIMARY KEY (`group_id`,`user_name`,`group_name`),
+  KEY `group_name_name_idx` (`group_name`),
+  KEY `user_name_idx` (`user_name`));
